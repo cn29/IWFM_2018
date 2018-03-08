@@ -2,6 +2,7 @@
 import csv
 import pprint
 import os
+import operator
 import numpy as np
 
 # np.set_printoptions(precision=2)
@@ -19,29 +20,46 @@ table = [dict() for _ in range(len(filelist))]
 
 # filelist = os.listdir(Dir)
 # print(filelist)filelist = os.listdir(Dir)
-print(filelist)
 
-
+# remove file start with '.'
+tmplist = []
+for name in filelist:
+	if not name.startswith('.'):
+		tmplist.append(name)
+filelist = tmplist
 
 for i in range(len(filelist)):
 	with open(Dir+filelist[i], 'r') as f:
 		readcsv = csv.reader(f, delimiter=',')
 		for cnt, row in zip(range(25), readcsv):
 			if cnt > 0:
-				table[i][row[0]] = "{:.1f}".format(float(row[1])/runtime[i] * 100)
+				print(row[0], row[1])
+				#table[i][row[0]] = "{:.1f}".format(float(row[1])/runtime[i] * 100)
+				table[i][row[0]] = float(row[1])/runtime[i] * 100
 
+pprint.pprint(sorted(table[0].items(), key=operator.itemgetter(1), reverse=True))
 
-pprint.pprint(table[1])
-print(type(table[0]['ILUT']))
+# take intersection of top 6 subroutines from all experiments
+N1 = 6
+top_rountines = []
+for i in range(len(filelist)):
+	for idx, pair in zip(range(N1), sorted(table[i].items(), key=operator.itemgetter(1), reverse=True)):
+		if pair[0] not in top_rountines:
+			top_rountines.append(pair[0])
 
-tableAll = dict()
-for cnt, key in zip(range(10), table[0]):
-	tableAll[key] = []
+print('-----', top_rountines)
+
+# collect runtimes corresponding to top rountines in all experiments
+percent = [[] for _ in range(len(top_rountines))]
+for idx in range(len(top_rountines)):
 	for i in range(len(filelist)):
+		key = top_rountines[idx]
 		if key in table[i]:
-			tableAll[key].append(table[i][key])
+			percent[idx].append(table[i][key])
 		else:
-			tableAll[key].append('NA')
+			percent[idx].append(0.0)
 
-
-pprint.pprint(tableAll)
+for idx in range(len(top_rountines)):
+	print(top_rountines[idx], end='\t')
+	print(["{0:.1f}".format(perc) for perc in percent[idx]], end=' ')
+	print(' ')
