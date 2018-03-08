@@ -4,6 +4,7 @@ import pprint
 import os
 import operator
 import numpy as np
+import matplotlib.pyplot as plt
 
 # np.set_printoptions(precision=2)
 runtime = [650, 15500, 670, 3000]
@@ -33,7 +34,6 @@ for i in range(len(filelist)):
 		readcsv = csv.reader(f, delimiter=',')
 		for cnt, row in zip(range(25), readcsv):
 			if cnt > 0:
-				print(row[0], row[1])
 				#table[i][row[0]] = "{:.1f}".format(float(row[1])/runtime[i] * 100)
 				table[i][row[0]] = float(row[1])/runtime[i] * 100
 
@@ -47,7 +47,8 @@ for i in range(len(filelist)):
 		if pair[0] not in top_rountines:
 			top_rountines.append(pair[0])
 
-print('-----', top_rountines)
+# print(' - ', '\n -  '.join(top_rountines))
+print(' ', *top_rountines, sep='\n ')
 
 # collect runtimes corresponding to top rountines in all experiments
 percent = [[] for _ in range(len(top_rountines))]
@@ -63,3 +64,9 @@ for idx in range(len(top_rountines)):
 	print(top_rountines[idx], end='\t')
 	print(["{0:.1f}".format(perc) for perc in percent[idx]], end=' ')
 	print(' ')
+
+# plot
+xlabels = ['SimC2V_CG', 'Butte', 'SimC2V_FG 3 years', 'SimC2V_FG 15 years']	
+plt.title(top_rountines[0])
+plt.plot(percent[0])
+plt.show()
