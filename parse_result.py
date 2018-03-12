@@ -5,6 +5,7 @@ import os
 import operator
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 # np.set_printoptions(precision=2)
 runtime = [650, 15500, 670, 3000]
@@ -60,13 +61,36 @@ for idx in range(len(top_rountines)):
 		else:
 			percent[idx].append(0.0)
 
+npercent = np.asarray(percent)
+npercent_sum = np.sum(npercent, axis=0)
+print(npercent_sum)
 for idx in range(len(top_rountines)):
 	print(top_rountines[idx], end='\t')
 	print(["{0:.1f}".format(perc) for perc in percent[idx]], end=' ')
 	print(' ')
 
 # plot
-xlabels = ['SimC2V_CG', 'Butte', 'SimC2V_FG 3 years', 'SimC2V_FG 15 years']	
-plt.title(top_rountines[0])
-plt.plot(percent[0])
+x = [0,1,2,3]
+xlabels = ['SimC2V_CG\n%.1f%%'%npercent_sum[0], 'Butte\n%.1f%%'%npercent_sum[1], 
+			'SimC2V_FG\n 3 years\n%.1f%%'%npercent_sum[2], 'SimC2V_FG\n 15 years\n%.1f%%'%npercent_sum[3]]	
+plt.figure()
+#set x limits
+plt.ylim((-1, 30))
+plt.xlim((-1, 4))
+# set tick labels
+plt.xticks([0, 1, 2, 3], xlabels)
+
+l0, = plt.plot(x, percent[0], label=top_rountines[0], marker='D')
+l1, = plt.plot(x, percent[1], label=top_rountines[1], marker='D', color='red', linewidth=1.0, linestyle='--')
+l2, = plt.plot(x, percent[2], label=top_rountines[2], marker='D', color='g', linewidth=1.0, linestyle='-')
+l3, = plt.plot(x, percent[3], label=top_rountines[3], marker='D', color='c', linewidth=1.0, linestyle=':')
+l4, = plt.plot(x, percent[4], label=top_rountines[4], marker='D', color='m', linewidth=1.0, linestyle='--')
+l5, = plt.plot(x, percent[5], label=top_rountines[5], marker='D', color='y', linewidth=1.0, linestyle='--')
+l6, = plt.plot(x, percent[6], label=top_rountines[6], marker='D', color='k', linewidth=1.0, linestyle='--')
+l7, = plt.plot(x, percent[7], label=top_rountines[7], marker='D', color='b', linewidth=1.0, linestyle=':')
+l8, = plt.plot(x, percent[8], label=top_rountines[8], marker='D', color='b', linewidth=1.0, linestyle=':')
+l9, = plt.plot(x, percent[9], label=top_rountines[9], marker='D', color='c', linewidth=1.0, linestyle=':')
+
+
+plt.legend(handles=[l0, l1, l2, l3, l4, l5, l6, l7, l8, l9], labels=top_rountines[0:10],  loc='best')
 plt.show()
