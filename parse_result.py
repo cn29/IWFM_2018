@@ -80,6 +80,7 @@ plt.figure()
 plt.ylim((-1,25))
 plt.xlim((-0.5, 4.5))
 # set tick labels
+plt.ylabel("Overall runtime percentage")
 plt.xticks([0, 1, 2, 3, 4], xlabels)
 
 l0, = plt.plot(x, percent[0], label=top_rountines[0], marker='D')
